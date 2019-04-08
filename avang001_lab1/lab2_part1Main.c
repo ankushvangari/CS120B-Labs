@@ -1,9 +1,11 @@
-/*
- * avang001_lab1_part1.c
- *
- * Created: 4/3/2019 4:00:02 PM
- * Author : Ankush Vangari
- */ 
+/*    Name & E-mail: Ankush Vangari - avang001@ucr.edu
+ *    Lab Section: 21
+ *    Assignment: Lab # 2 Exercise # 1
+ *    Exercise Description: [optional - include for your own benefit]
+ *    
+ *    I acknowledge all content contained herein, excluding template or example
+ *    code, is my own original work.
+ */
 
 #include <avr/io.h>
 
