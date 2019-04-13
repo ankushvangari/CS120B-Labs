@@ -1,6 +1,7 @@
-/*    Name & E-mail: Ankush Vangari - avang001@ucr.edu
+/*    Partner 1 Name & E-mail: Ankush Vangari - avang001@ucr.edu
+ *    Partner 2 Name & E-mail: Justin Luo - jluo036@ucr.edu
  *    Lab Section: 21
- *    Assignment: Lab # 2 Exercise # 4
+ *    Assignment: Lab # 3 Exercise # 4
  *    Exercise Description: [optional - include for your own benefit]
  *    
  *    I acknowledge all content contained herein, excluding template or example
