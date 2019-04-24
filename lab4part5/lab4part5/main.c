@@ -1,13 +1,15 @@
 /*
- * dseet001_lab4_part3.c
+ * dseet001_lab4_part5.c
  *
- * Created: 4/11/2019 9:27:39 PM
+ * Created: 4/11/2019 10:14:36 PM
  * Author : 
  */ 
 
 #include <avr/io.h>
 
-enum state {init, waitP, waitPR, waitY, open, lock} curr;
+enum state {init, waitP, waitPR, open, lock} curr;
+unsigned char arr[] = {0x04, 0x01, 0x02, 0x01};
+unsigned short pos = 0x00;
 
 void tick() {
 	switch(curr) {
@@ -17,8 +19,16 @@ void tick() {
 		case waitP:
 			if (PINA & 0x80) {
 				curr = lock;
-			} else if (PINA == 0x04) {
-				curr = waitPR;
+			} else if (PINA == arr[pos]) {
+				if (pos == 0x03) {
+					if (PORTB == 0x00) {
+						curr = open;
+					} else {
+						curr = lock;
+					}
+				} else {
+					curr = waitPR;
+				}
 			} else {
 				curr = waitP;
 			}
@@ -27,20 +37,10 @@ void tick() {
 			if (PINA & 0x80) {
 				curr = lock;
 			} else if (PINA == 0x00) {
-				curr = waitY;
-			} else if (PINA == 0x04) {
-				curr = waitPR;
-			} else {
+				pos++;
 				curr = waitP;
-			}
-			break;
-		case waitY:
-			if (PINA & 0x80) {
-				curr = lock;
-			} else if (PINA == 0x02) {
-				curr = open;
-			} else if (PINA == 0x00) {
-				curr = waitY;
+			} else if (PINA == arr[pos]) {
+				curr = waitPR;
 			} else {
 				curr = waitP;
 			}
@@ -49,8 +49,9 @@ void tick() {
 			if (PINA & 0x80) {
 				curr = lock;
 			} else {
-				curr = open;
+				curr = waitP;
 			}
+			pos = 0x00;
 			break;
 		case lock:
 			if (PINA & 0x80) {
@@ -58,6 +59,7 @@ void tick() {
 			} else {
 				curr = waitP;
 			}
+			pos = 0x00;
 			break;
 		default:
 			curr = init;
@@ -66,16 +68,10 @@ void tick() {
 	
 	switch(curr) {
 		case init:
-			PORTB = 0x00;
 			break;
 		case waitP:
-			PORTB = 0x00;
 			break;
 		case waitPR:
-			PORTB = 0x00;
-			break;
-		case waitY:
-			PORTB = 0x00;
 			break;
 		case open:
 			PORTB = 0x01;
@@ -86,13 +82,14 @@ void tick() {
 		default:
 			break;
 	}
-	PORTC =  curr;
+	PORTC = curr << 4;
+	PORTC = (PORTC & 0xF0) | pos;
 }
 
 int main(void)
 {
 	DDRA = 0x00; PORTA = 0xFF; //DDR to 00 for read, PORT to FF for read
-	DDRC = 0xFF; PORTB = 0x00; //DDR to FF for write, PORT to FF for write
+	DDRB = 0xFF; PORTB = 0x00; //DDR to FF for write, PORT to FF for write
 	DDRC = 0xFF; PORTC = 0x00; //DDR to FF for write, PORT to FF for write
 	while (1)
 	{

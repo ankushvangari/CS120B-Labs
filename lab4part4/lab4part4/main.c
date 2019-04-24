@@ -1,7 +1,6 @@
 /*
- * dseet001_lab4_part3.c
  *
- * Created: 4/11/2019 9:27:39 PM
+ * Created: 4/11/2019 9:54:55 PM
  * Author : 
  */ 
 
@@ -38,7 +37,11 @@ void tick() {
 			if (PINA & 0x80) {
 				curr = lock;
 			} else if (PINA == 0x02) {
-				curr = open;
+				if (PORTB == 0x00) {
+					curr = open;
+				} else {
+					curr = lock;
+				}
 			} else if (PINA == 0x00) {
 				curr = waitY;
 			} else {
@@ -49,7 +52,7 @@ void tick() {
 			if (PINA & 0x80) {
 				curr = lock;
 			} else {
-				curr = open;
+				curr = waitP;
 			}
 			break;
 		case lock:
@@ -66,16 +69,12 @@ void tick() {
 	
 	switch(curr) {
 		case init:
-			PORTB = 0x00;
 			break;
 		case waitP:
-			PORTB = 0x00;
 			break;
 		case waitPR:
-			PORTB = 0x00;
 			break;
 		case waitY:
-			PORTB = 0x00;
 			break;
 		case open:
 			PORTB = 0x01;
@@ -92,7 +91,7 @@ void tick() {
 int main(void)
 {
 	DDRA = 0x00; PORTA = 0xFF; //DDR to 00 for read, PORT to FF for read
-	DDRC = 0xFF; PORTB = 0x00; //DDR to FF for write, PORT to FF for write
+	DDRB = 0xFF; PORTB = 0x00; //DDR to FF for write, PORT to FF for write
 	DDRC = 0xFF; PORTC = 0x00; //DDR to FF for write, PORT to FF for write
 	while (1)
 	{
